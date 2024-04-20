@@ -1,21 +1,31 @@
-import React, { useState } from 'react'
-import { Navbar, Container, Card, Form, Button, FloatingLabel, Row, Col } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react';
+import { Navbar, Container, Card, Form, Button, FloatingLabel, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-const player = 'Rohit'
 const UserSelection = () => {
-  const [selectedPlayer, setSelectedPlayer] = useState('2')
-  const [selectedColor, setSelectedColor] = useState<'RED' | 'GREEN' | 'BLUE'>('RED')
+  const [playerName] = useState(localStorage.getItem('playerName') || '');
+  const [selectedPlayer, setSelectedPlayer] = useState('2');
+  const [selectedColor, setSelectedColor] = useState<'RED' | 'GREEN' | 'BLUE'>('RED');
+  const navigate = useNavigate();
+
   const handleContinue = () => {
-    console.log(selectedPlayer)
-  }
-  const adminPlayeName = player + '(Admin)'
+    localStorage.setItem('playerSize', selectedPlayer);
+    navigate('/game');
+  };
+  useEffect(() => {
+    if (playerName) {
+      navigate('/');
+    }
+  }, []);
+  const adminPlayeName =
+    (playerName?.length > 15 ? selectedPlayer?.slice(0, 15) + '...' : selectedPlayer) + '(Admin)';
   return (
     <>
       <Navbar bg='dark' data-bs-theme='dark'>
         <Container>
           <Navbar.Collapse className='justify-content-end'>
             <Navbar.Text>
-              Signed in as: <span>Rohit</span>
+              Signed in as: <span>{selectedPlayer}</span>
             </Navbar.Text>
           </Navbar.Collapse>
         </Container>
@@ -23,12 +33,11 @@ const UserSelection = () => {
       <Card style={{ width: '30rem', margin: '1rem auto' }}>
         <Card.Body>
           <Card.Title>Game Settings</Card.Title>
-          <Card.Subtitle className='mb-2 text-muted'>Card Subtitle</Card.Subtitle>
           <Card.Text>
             <FloatingLabel controlId='floatingSelectGrid' label='Number Of player'>
               <Form.Select
                 onChange={(e) => {
-                  setSelectedPlayer(e.target.value)
+                  setSelectedPlayer(e.target.value);
                 }}
                 aria-label='Default select example'
               >
@@ -85,7 +94,7 @@ const UserSelection = () => {
         </Card.Body>
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default UserSelection
+export default UserSelection;

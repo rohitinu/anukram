@@ -21,6 +21,23 @@ table {
   border-collapse: collapse;
   width: 100%;
 }
-.image-css {
-  /* transform: rotate(90deg); */
+.dot {
+  height: 3rem;
+  width: 3rem;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  left: 1rem;
+  top: 2rem;
+  z-index: 10;
+}
+.red-color {
+  background-color: red;
+}
+.blue-color {
+  background-color: blue;
+}
+.green-color {
+  background-color: green;
 }
