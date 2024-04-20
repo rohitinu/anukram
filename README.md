@@ -1,5 +1,10 @@
-# Foobar
+# Flow
 
-Foobar is a Python library for dealing with word pluralization.
+- Form to input name.
+- Onwer can start the game. [So form to fill the size {2,3,4,6}]
+- Game Board.[ Table 10*10].
+- Will be played clockwise
+- Player Name and 5 Card Deck
 
-## Installation
+## Component Required
+- Form: Input, Drop-down,

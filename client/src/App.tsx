@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+import NameForm from './components/UserForm/NameForm'
+import { Route, Routes } from 'react-router-dom'
+import UserSelection from './components/UserForm/UserSlection'
+import GameBoard from './components/GameBoard'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Routes>
+        <Route path='/' element={<NameForm />} />
+        <Route path='/user-selection' element={<UserSelection />} />
+        <Route path='/game' element={<GameBoard />} />
+      </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
