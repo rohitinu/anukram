@@ -4,7 +4,13 @@ import { COLOR_TYPE, UserType } from '../UserForm/UserSlection';
 const getPlayerNames = (playerInfo: UserType[], color: COLOR_TYPE) => {
   return playerInfo
     .filter((player) => player.color === color)
-    ?.map((cv) => <div key={cv.id}>{cv.userName}</div>);
+    ?.map((cv) => <div key={cv.id}>{cv.isAdmin ? cv.userName + '[Admin]' : cv.userName}</div>);
+};
+const defaultStyle = {
+  height: '6rem',
+  margin: '.5rem',
+  alignContent: 'center',
+  color: 'white',
 };
 const ColorSelection = ({
   playerInfo,
@@ -19,11 +25,8 @@ const ColorSelection = ({
         <Col
           onClick={() => setSelectedColor?.('RED')}
           style={{
-            height: '6rem',
             background: 'red',
-            margin: '.5rem',
-            alignContent: 'center',
-            color: 'white',
+            ...defaultStyle,
           }}
         >
           {getPlayerNames(playerInfo, 'RED')}
@@ -31,11 +34,8 @@ const ColorSelection = ({
         <Col
           onClick={() => setSelectedColor?.('BLUE')}
           style={{
-            height: '6rem',
             background: 'blue',
-            margin: '.5rem',
-            alignContent: 'center',
-            color: 'white',
+            ...defaultStyle,
           }}
         >
           {getPlayerNames(playerInfo, 'BLUE')}
@@ -43,11 +43,8 @@ const ColorSelection = ({
         <Col
           onClick={() => setSelectedColor?.('GREEN')}
           style={{
-            height: '6rem',
             background: 'green',
-            margin: '.5rem',
-            alignContent: 'center',
-            color: 'white',
+            ...defaultStyle,
           }}
         >
           {getPlayerNames(playerInfo, 'GREEN')}

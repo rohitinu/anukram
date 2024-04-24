@@ -6,17 +6,22 @@ import UserSelection from './components/UserForm/UserSlection';
 import GameBoard from './components/GameBoard';
 import WaitinRoom from './components/UserForm/WaitingRoom';
 import Toaster from './components/Toast/Toaster';
+import { ToastProvider } from './components/Toast/ToastProvider';
 
 function App() {
   return (
     <div className='App'>
-      <Toaster />
-      <Routes>
-        <Route path='/' element={<NameForm />} />
-        <Route path='/user-selection' element={<UserSelection />} />
-        <Route path='/game' element={<GameBoard />} />
-        <Route path='/waiting-room' element={<WaitinRoom />} />
-      </Routes>
+      <ToastProvider>
+        <>
+          <Toaster />
+          <Routes>
+            <Route path='/' element={<NameForm />} />
+            <Route path='/user-selection' element={<UserSelection />} />
+            <Route path='/game' element={<GameBoard />} />
+            <Route path='/waiting-room' element={<WaitinRoom />} />
+          </Routes>
+        </>
+      </ToastProvider>
     </div>
   );
 }

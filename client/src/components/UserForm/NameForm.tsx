@@ -14,7 +14,7 @@ const NameForm = () => {
         sessionStorage.setItem('playerInfo', JSON.stringify(resp.data));
         navigation('/user-selection');
       })
-      .catch((e) => console.log('error,', e));
+      .catch((e) => console.error('error,', e));
   };
   return (
     <Card>

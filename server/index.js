@@ -37,12 +37,27 @@ const io = new Server(server, {
 function leaveRoom(userID, chatRoomUsers) {
   return chatRoomUsers.filter((user) => user.id != userID);
 }
+const invalidRoomError = (socket, msg) => {
+  socket.emit("ERROR_MESSAGE", {
+    message: msg,
+  });
+};
+const playerInfoMsg = (socket, msg, room, playerInfo, start = false) => {
+  socket.in(room).emit("PLAYER_MESSAGE", {
+    message: msg,
+    gameInfo: playerInfo,
+    start,
+  });
+  socket.emit("PLAYER_MESSAGE", {
+    message: msg,
+    gameInfo: playerInfo,
+    start,
+  });
+};
 io.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
-
   // Create a room when inititaion id Matches with the code
-
-  socket.on("create_room", (data) => {
+  socket.on("CREATE_ROOM", (data) => {
     const { userName, id, color, initiationId, playerSize } = data;
     let gameId;
     if (initiationId === INITIATION_ID) {
@@ -56,91 +71,64 @@ io.on("connection", (socket) => {
       // join the socket
       socket.join(gameId);
 
-      socket.emit("room_created", { room: gameId, user });
+      socket.emit("ROOM_CREATED", { room: gameId, user });
     } else {
-      socket.emit("invalid_code", {
-        message: `Intiation Id: ${initiationId} is not autorised to create a game. Try to joining the game.`,
-      });
+      invalidRoomError(
+        socket,
+        `Intiation Id: ${initiationId} is not autorised to create a game. Try to joining the game.`
+      );
     }
     console.log(Array.from(GAME_ROOMS.keys()), gameId);
   });
 
-  socket.on("join_game", (data) => {
+  socket.on("JOIN_GAME", (data) => {
     const { userName, room, id } = data;
-    console.log(Array.from(GAME_ROOMS.keys()), room);
+
     const gamePlayerInfo = GAME_ROOMS.get(room);
-    console.log(gamePlayerInfo.users.length);
+
     if (!gamePlayerInfo) {
-      socket.emit("invalid_room", {
-        room: room,
-        message: "Game room is not valid",
-      });
+      invalidRoomError(socket, "Game room is not valid");
     } else if (gamePlayerInfo.users.length >= gamePlayerInfo.playerSize) {
-      console.log("room is full");
-      socket.emit("invalid_room", {
-        room: room,
-        message: "Game room is full, Please join other game",
-      });
+      invalidRoomError(socket, "Game room is full, Please join other game");
     } else {
       gamePlayerInfo.users.push({ id, userName, isAdmin: false });
       // join the socket
       GAME_ROOMS.set(room, gamePlayerInfo);
       socket.join(room);
 
-      socket.in(room).emit("player_message", {
-        message: `${userName} has joined the game room`,
-        gameInfo: gamePlayerInfo,
-      });
-      socket.emit("player_message", {
-        message: `${userName} has joined the game room`,
-        gameInfo: gamePlayerInfo,
-      });
+      playerInfoMsg(
+        socket,
+        `${userName} has joined the game room`,
+        room,
+        gamePlayerInfo,
+        false
+      );
     }
   });
 
-  socket.on("update_color", (data) => {
-    const { userName, room, id, color } = data;
+  socket.on("UPDATE_COLOR", (data) => {
+    const { room, id, color } = data;
     const gamePlayerInfo = GAME_ROOMS.get(room);
     if (!gamePlayerInfo) {
-      socket.emit("invalid_room", {
-        room: room,
-        message: "Game room is not valid",
-      });
+      invalidRoomError(socket, "Game room is not valid");
     } else {
+      // Check color validation
       gamePlayerInfo.users = gamePlayerInfo.users.map((cv) => {
         if (cv.id === id) {
           return { ...cv, color: color };
         } else return cv;
       });
-      // join the socket
       GAME_ROOMS.set(room, gamePlayerInfo);
-      socket.in(room).emit("player_message", {
-        message: `${userName} has joined the game room`,
-        gameInfo: gamePlayerInfo,
-      });
-      socket.emit("player_message", {
-        message: `${userName} has joined the game room`,
-        gameInfo: gamePlayerInfo,
-      });
+      if (
+        gamePlayerInfo.users.filter((cv) => cv.color).length ==
+        gamePlayerInfo.playerSize
+      ) {
+        playerInfoMsg(socket, "", room, gamePlayerInfo, true);
+      } else {
+        playerInfoMsg(socket, "", room, gamePlayerInfo, false);
+      }
     }
   });
-
-  // socket.on("leave_room", (data) => {
-  //   const { userName, room } = data;
-  //   socket.leave(room);
-  //   const __createdtime__ = Date.now();
-
-  //   allUsers = leaveRoom(socket.id, allUsers);
-
-  //   socket.to(room).emit("chatroom_users", allUsers);
-
-  //   socket.to(room).emit("receive_message", {
-  //     userName: CHAT_BOT,
-  //     message: `${userName} has left the chat`,
-  //     __createdtime__,
-  //   });
-  //   console.log(`${userName} has left the chat`);
-  // });
 });
 
 app.post("/create-user", function (req, res) {

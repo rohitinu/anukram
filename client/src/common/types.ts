@@ -1,0 +1,10 @@
+export enum SocketAction {
+  CREATE_ROOM = 'CREATE_ROOM',
+  JOIN_GAME = 'JOIN_GAME',
+  UPDATE_COLOR = 'UPDATE_COLOR',
+}
+export enum SocketListner {
+  ROOM_CREATED = 'ROOM_CREATED',
+  PLAYER_MESSAGE = 'PLAYER_MESSAGE',
+  ERROR_MESSAGE = 'ERROR_MESSAGE',
+}

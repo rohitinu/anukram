@@ -1,10 +1,11 @@
-import axios from '../../AxiosInstance';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navbar, Container, Card, Form, Button, FloatingLabel } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ColorSelection from '../common/ColorSelection';
 import JoinBoard from './JoinBoard';
 import socket from '../../common/socket';
+import { SocketAction, SocketListner } from '../../common/types';
+import { useToast } from '../Toast/ToastProvider';
 
 export type COLOR_TYPE = 'RED' | 'GREEN' | 'BLUE';
 export interface UserType {
@@ -22,35 +23,32 @@ const UserSelection = () => {
   const [selectedPlayer, setSelectedPlayer] = useState('2');
   const [selectedColor, setSelectedColor] = useState<COLOR_TYPE>('RED');
   const [gameCode, setGameCode] = useState<string>('4365');
+  const { addToast } = useToast();
   const navigate = useNavigate();
   const handleContinue = () => {
-    socket.emit(
-      'create_room',
-      {
-        userName: playerInfo.userName,
-        id: playerInfo.id,
-        color: selectedColor,
-        initiationId: gameCode,
-        playerSize: selectedPlayer,
-      } as any,
-      () => {
-        console.log('resp');
-      },
-    );
+    socket.emit(SocketAction.CREATE_ROOM, {
+      userName: playerInfo.userName,
+      id: playerInfo.id,
+      color: selectedColor,
+      initiationId: gameCode,
+      playerSize: selectedPlayer,
+    } as any);
   };
   useEffect(() => {
     if (!playerInfo.id) {
       navigate('/');
     }
-    socket.on('invalid_room', (resp) => console.log(resp));
-    socket.on('room_created', (data) => {
+    socket.on(SocketListner.ERROR_MESSAGE, (data) => {
+      addToast({ text: data.message, intent: 'danger' });
+    });
+    socket.on(SocketListner.ROOM_CREATED, (data) => {
       console.log(data);
       sessionStorage.setItem('playerInfo', JSON.stringify({ ...data.user, room: data.room }));
       navigate('/waiting-room');
     });
     return () => {
-      socket.off('invalid_room');
-      socket.off('room_created');
+      socket.off(SocketListner.ERROR_MESSAGE);
+      socket.off(SocketListner.ROOM_CREATED);
     };
   }, []);
 
@@ -67,7 +65,7 @@ const UserSelection = () => {
       </Navbar>
       <Card style={{ width: '40rem', margin: '1rem auto' }}>
         <Card.Body>
-          <Card.Title>Game Settings</Card.Title>
+          <Card.Title>{isInitiator ? 'Game Settings' : 'Join Game Board'}</Card.Title>
           <Card.Subtitle>
             <Form.Check // prettier-ignore
               type='switch'
