@@ -78,7 +78,6 @@ io.on("connection", (socket) => {
         `Intiation Id: ${initiationId} is not autorised to create a game. Try to joining the game.`
       );
     }
-    console.log(Array.from(GAME_ROOMS.keys()), gameId);
   });
 
   socket.on("JOIN_GAME", (data) => {
@@ -132,7 +131,6 @@ io.on("connection", (socket) => {
 });
 
 app.post("/create-user", function (req, res) {
-  console.log(req.body);
   res.send({ ...req.body, id: uuidv4() });
 });
 

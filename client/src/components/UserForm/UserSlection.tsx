@@ -42,7 +42,6 @@ const UserSelection = () => {
       addToast({ text: data.message, intent: 'danger' });
     });
     socket.on(SocketListner.ROOM_CREATED, (data) => {
-      console.log(data);
       sessionStorage.setItem('playerInfo', JSON.stringify({ ...data.user, room: data.room }));
       navigate('/waiting-room');
     });
