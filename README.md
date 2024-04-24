@@ -7,4 +7,13 @@
 - Player Name and 5 Card Deck
 
 ## Component Required
+
 - Form: Input, Drop-down,
+
+## Server
+
+- create-user,
+
+# create-gmae
+
+    - create-game,

@@ -3,13 +3,18 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
-
+import axios from '../../AxiosInstance';
 const NameForm = () => {
   const [name, setName] = React.useState('');
   const navigation = useNavigate();
   const handleContinue = () => {
-    localStorage.setItem('playerName', name);
-    navigation('/user-selection');
+    axios
+      .post('/create-user', { userName: name })
+      .then((resp) => {
+        sessionStorage.setItem('playerInfo', JSON.stringify(resp.data));
+        navigation('/user-selection');
+      })
+      .catch((e) => console.log('error,', e));
   };
   return (
     <Card>

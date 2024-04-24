@@ -1,7 +1,7 @@
-import { Container, Row, Stack } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import PlayerInfo from './PlayerInfo';
 import Board from './Board';
-import { cardDeck, cardMap } from './imageImport';
+import { cardDeck } from './imageImport';
 import { useRef, useState } from 'react';
 interface PlayeInfo {
   player: number;
@@ -23,12 +23,12 @@ function shuffle(array: string[]) {
   }
 }
 shuffle(cardDeck);
+
 const pickACard = () => {
   return cardDeck.pop() || 'NO_MORE_CARD';
 };
 
 const GameBoard = () => {
-  // const [playerSize] = useState(localStorage.getItem('playerSize'));
   const playerMapping = useRef<PlayeInfo[]>([
     {
       player: 0,
