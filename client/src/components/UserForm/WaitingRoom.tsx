@@ -34,13 +34,11 @@ const WaitinRoom = () => {
   }, []);
 
   return (
-    <Card style={{ width: '40rem', margin: '1rem auto' }}>
+    <Card data-bs-theme='dark' style={{ width: '40rem', margin: '1rem auto' }}>
       <Card.Body>
         <Card.Title>Game Settings</Card.Title>
         <Card.Title>Code: {room.current}</Card.Title>
-        <Card.Text>
-          <ColorSelection playerInfo={playerInfo} />
-        </Card.Text>
+        <ColorSelection playerInfo={playerInfo} />
       </Card.Body>
     </Card>
   );

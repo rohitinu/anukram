@@ -14,6 +14,7 @@ export interface UserType {
   color?: COLOR_TYPE;
   room?: string;
   isAdmin?: boolean;
+  cards?: string[];
 }
 const UserSelection = () => {
   const [playerInfo] = useState<UserType>(
@@ -43,6 +44,7 @@ const UserSelection = () => {
     });
     socket.on(SocketListner.ROOM_CREATED, (data) => {
       sessionStorage.setItem('playerInfo', JSON.stringify({ ...data.user, room: data.room }));
+      sessionStorage.setItem('roomId', data.room);
       navigate('/waiting-room');
     });
     return () => {
@@ -62,7 +64,7 @@ const UserSelection = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Card style={{ width: '40rem', margin: '1rem auto' }}>
+      <Card data-bs-theme='dark' style={{ width: '40rem', margin: '1rem auto' }}>
         <Card.Body>
           <Card.Title>{isInitiator ? 'Game Settings' : 'Join Game Board'}</Card.Title>
           <Card.Subtitle>
@@ -76,7 +78,7 @@ const UserSelection = () => {
           </Card.Subtitle>
 
           {isInitiator ? (
-            <Card.Text>
+            <>
               <FloatingLabel controlId='floatingSelectGrid' label='Number Of player'>
                 <Form.Select
                   onChange={(e) => {
@@ -86,8 +88,6 @@ const UserSelection = () => {
                 >
                   <option value='2'>2</option>
                   <option value='3'>3</option>
-                  <option value='4'>4</option>
-                  <option value='6'>6</option>
                 </Form.Select>
               </FloatingLabel>
               <ColorSelection
@@ -106,7 +106,7 @@ const UserSelection = () => {
               <Button variant='primary' onClick={handleContinue}>
                 Start Game
               </Button>
-            </Card.Text>
+            </>
           ) : (
             <JoinBoard />
           )}

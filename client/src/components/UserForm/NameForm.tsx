@@ -12,12 +12,13 @@ const NameForm = () => {
       .post('/create-user', { userName: name })
       .then((resp) => {
         sessionStorage.setItem('playerInfo', JSON.stringify(resp.data));
+        sessionStorage.setItem('currentPlayerId', JSON.stringify(resp.data?.id));
         navigation('/user-selection');
       })
       .catch((e) => console.error('error,', e));
   };
   return (
-    <Card>
+    <Card data-bs-theme='dark' style={{ width: '40rem', padding: '2rem', margin: '1rem auto' }}>
       <Form.Control
         value={name}
         onChange={(e) => setName(e.target.value)}

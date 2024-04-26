@@ -59,7 +59,7 @@ import TenOfS from '../../assets/cards/10_of_spades.png';
 import TenOfH from '../../assets/cards/10_of_hearts.png';
 import BlackJ from '../../assets/cards/black_joker.png';
 
-export const cardMap = {
+export const cardMap: Record<string, string> = {
   oneOfA: oneOfA,
   oneOfD: oneOfD,
   oneOfH: oneOfH,

@@ -31,6 +31,7 @@ const JoinBoard = () => {
     socket.on(SocketListner.PLAYER_MESSAGE, (data) => {
       setColorSlectionMode(true);
       addToast({ text: data.message, intent: 'info' });
+      sessionStorage.setItem('roomId', data.room);
       setPlayerInfo(data.gameInfo.users);
       if (data.start) {
         addToast({ text: 'Game will start in 5sec', intent: 'success' });
@@ -55,7 +56,7 @@ const JoinBoard = () => {
     });
   };
   return (
-    <Card.Text>
+    <>
       {colorSelection ? (
         <>
           <h5>Wating for Players To Join</h5>
@@ -75,7 +76,7 @@ const JoinBoard = () => {
           </Button>
         </>
       )}
-    </Card.Text>
+    </>
   );
 };
 export default JoinBoard;
