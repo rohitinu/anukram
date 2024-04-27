@@ -1,9 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
-import { Button, Card, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import socket from '../../common/socket';
-import { COLOR_TYPE, UserType } from './UserSlection';
 import ColorSelection from '../common/ColorSelection';
-import { SocketAction, SocketListner } from '../../common/types';
+import {
+  COLOR_TYPE,
+  JoinRoomPayload,
+  SocketAction,
+  SocketListner,
+  UserType,
+} from '../../common/types';
 import { useToast } from '../Toast/ToastProvider';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,8 +27,9 @@ const JoinBoard = () => {
       room: gameCode,
       id: currentPlayer.current?.id,
       userName: currentPlayer.current.userName,
-    } as any);
+    } as JoinRoomPayload);
   };
+
   useEffect(() => {
     socket.on(SocketListner.ERROR_MESSAGE, (data) => {
       addToast({ text: data.message, intent: 'danger' });
@@ -47,6 +53,7 @@ const JoinBoard = () => {
       socket.off(SocketListner.PLAYER_MESSAGE);
     };
   }, []);
+
   const handleColorClick = (color: COLOR_TYPE) => {
     socket.emit(SocketAction.UPDATE_COLOR, {
       id: currentPlayer.current.id,

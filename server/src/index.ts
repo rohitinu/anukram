@@ -8,6 +8,7 @@ import { pickACard, pickNCard, shuffledCard } from "./utils/cardInfo";
 import {
   CreateRoomPayload,
   GameInfoType,
+  JoinRoomPayload,
   MovePayload,
   UpdateColorPayload,
 } from "./types.js";
@@ -62,7 +63,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("JOIN_GAME", (data) => {
+  socket.on("JOIN_GAME", (data: JoinRoomPayload) => {
     const { userName, room, id } = data;
 
     const gamePlayerInfo = GAME_ROOMS.get(room);

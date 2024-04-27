@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { UserType } from '../UserForm/UserSlection';
 import socket from '../../common/socket';
-import { SocketAction, SocketListner } from '../../common/types';
+import { SocketAction, SocketListner, UserType } from '../../common/types';
 import { useNavigate } from 'react-router-dom';
 
 interface BoardContextProps {

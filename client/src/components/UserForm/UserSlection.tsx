@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Navbar, Container, Card, Form, Button, FloatingLabel } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Card, Form, Button, FloatingLabel, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ColorSelection from '../common/ColorSelection';
 import JoinBoard from './JoinBoard';
 import socket from '../../common/socket';
-import { SocketAction, SocketListner } from '../../common/types';
+import {
+  COLOR_TYPE,
+  CreateRoomPayload,
+  SocketAction,
+  SocketListner,
+  UserType,
+} from '../../common/types';
 import { useToast } from '../Toast/ToastProvider';
+import { useAppContext } from '../stores/AppContextProvider';
 
-export type COLOR_TYPE = 'RED' | 'GREEN' | 'BLUE';
-export interface UserType {
-  userName?: string;
-  id?: string;
-  color?: COLOR_TYPE;
-  room?: string;
-  isAdmin?: boolean;
-  cards?: string[];
-}
 const UserSelection = () => {
   const [playerInfo] = useState<UserType>(
     JSON.parse(sessionStorage.getItem('playerInfo') || '') as UserType,
   );
+  const { isDarkTheme } = useAppContext();
+
   const [isInitiator, setIsInitiator] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState('2');
   const [selectedColor, setSelectedColor] = useState<COLOR_TYPE>('RED');
@@ -28,12 +28,12 @@ const UserSelection = () => {
   const navigate = useNavigate();
   const handleContinue = () => {
     socket.emit(SocketAction.CREATE_ROOM, {
-      userName: playerInfo.userName,
+      userName: playerInfo.userName || '',
       id: playerInfo.id,
       color: selectedColor,
       initiationId: gameCode,
-      playerSize: selectedPlayer,
-    } as any);
+      playerSize: parseInt(selectedPlayer),
+    } as CreateRoomPayload);
   };
   useEffect(() => {
     if (!playerInfo.id) {
@@ -54,20 +54,15 @@ const UserSelection = () => {
   }, []);
 
   return (
-    <>
-      <Navbar bg='dark' data-bs-theme='dark'>
+    <Card
+      data-bs-theme={isDarkTheme ? 'dark' : 'light'}
+      style={{ width: '40rem', margin: '1rem auto' }}
+    >
+      <Card.Body>
+        <Card.Title>{isInitiator ? 'Game Settings' : 'Join Game Board'}</Card.Title>
+
         <Container>
-          <Navbar.Collapse className='justify-content-end'>
-            <Navbar.Text>
-              Signed in as: <span>{playerInfo.userName}</span>
-            </Navbar.Text>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-      <Card data-bs-theme='dark' style={{ width: '40rem', margin: '1rem auto' }}>
-        <Card.Body>
-          <Card.Title>{isInitiator ? 'Game Settings' : 'Join Game Board'}</Card.Title>
-          <Card.Subtitle>
+          <Row sm={3}>
             <Form.Check // prettier-ignore
               type='switch'
               id='custom-switch'
@@ -75,44 +70,43 @@ const UserSelection = () => {
               value={'' + isInitiator}
               onChange={() => setIsInitiator((prevState) => !prevState)}
             />
-          </Card.Subtitle>
-
-          {isInitiator ? (
-            <>
-              <FloatingLabel controlId='floatingSelectGrid' label='Number Of player'>
-                <Form.Select
-                  onChange={(e) => {
-                    setSelectedPlayer(e.target.value);
-                  }}
-                  aria-label='Default select example'
-                >
-                  <option value='2'>2</option>
-                  <option value='3'>3</option>
-                </Form.Select>
-              </FloatingLabel>
-              <ColorSelection
-                setSelectedColor={(color) => setSelectedColor(color)}
-                playerInfo={[
-                  { userName: playerInfo.userName, id: playerInfo.id, color: selectedColor },
-                ]}
-              />
-              <Form.Control
-                value={gameCode}
-                onChange={(e) => setGameCode(e.target.value)}
-                size='lg'
-                type='text'
-                placeholder='Please Game Initiation code'
-              />
-              <Button variant='primary' onClick={handleContinue}>
-                Start Game
-              </Button>
-            </>
-          ) : (
-            <JoinBoard />
-          )}
-        </Card.Body>
-      </Card>
-    </>
+          </Row>
+        </Container>
+        {isInitiator ? (
+          <>
+            <FloatingLabel controlId='floatingSelectGrid' label='Number Of player'>
+              <Form.Select
+                onChange={(e) => {
+                  setSelectedPlayer(e.target.value);
+                }}
+                aria-label='Default select example'
+              >
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+              </Form.Select>
+            </FloatingLabel>
+            <ColorSelection
+              setSelectedColor={(color) => setSelectedColor(color)}
+              playerInfo={[
+                { userName: playerInfo.userName, id: playerInfo.id, color: selectedColor },
+              ]}
+            />
+            <Form.Control
+              value={gameCode}
+              onChange={(e) => setGameCode(e.target.value)}
+              size='lg'
+              type='text'
+              placeholder='Please Game Initiation code'
+            />
+            <Button variant='primary' className='m-4' onClick={handleContinue}>
+              Create Game Room
+            </Button>
+          </>
+        ) : (
+          <JoinBoard />
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 

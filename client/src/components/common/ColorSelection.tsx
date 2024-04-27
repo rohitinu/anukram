@@ -1,5 +1,5 @@
 import { Container, Row, Col } from 'react-bootstrap';
-import { COLOR_TYPE, UserType } from '../UserForm/UserSlection';
+import { UserType, COLOR_TYPE } from '../../common/types';
 
 const getPlayerNames = (playerInfo: UserType[], color: COLOR_TYPE) => {
   return playerInfo

@@ -22,13 +22,18 @@ export interface CreateRoomPayload {
   initiationId: string;
   playerSize: number;
 }
+export interface JoinRoomPayload {
+  userName: string;
+  room: string;
+  id: string;
+}
 export interface UpdateColorPayload {
   room: string;
   id: string;
   color: COLOR_TYPE;
 }
 export interface MovePayload extends UpdateColorPayload {
-  action: "PUT";
+  action: "PUT" | "REMOVE";
   location: string;
   card: string;
 }
