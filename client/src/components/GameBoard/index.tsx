@@ -4,20 +4,48 @@ import Board from './Board';
 import { useBoardContext } from './GameBoardProvider';
 import socket from '../../common/socket';
 import { SocketAction } from '../../common/types';
-
+import { REMOVE_CARD_STRING, WILD_CARD_STRING } from './imageImport';
+const checkContainsWildCard = (cards?: string[]): boolean => {
+  return !!cards?.find((cv) => WILD_CARD_STRING.includes(cv));
+};
+const checkContainsRemoveCard = (cards?: string[]): boolean => {
+  return !!cards?.find((cv) => REMOVE_CARD_STRING.includes(cv));
+};
 const GameBoard = () => {
   const { coinPosition, activePlayer, playerInfo, currentPlayerId, room } = useBoardContext();
   const myIndex = playerInfo.findIndex((user) => user.id === currentPlayerId);
 
   const handlePlayerClick = (id: string, cardName: string) => {
     const player = playerInfo[myIndex];
-    if (player.cards?.includes(cardName)) {
+    if (
+      coinPosition[id] &&
+      coinPosition[id].toLowerCase() !== player?.color?.toLowerCase() &&
+      checkContainsRemoveCard(player?.cards)
+    ) {
+      socket.emit(SocketAction.MOVE, {
+        room,
+        color: player.color?.toLowerCase(),
+        action: 'REMOVE',
+        location: id,
+        card: player.cards?.find((cv) => REMOVE_CARD_STRING.includes(cv)),
+        id: player.id,
+      });
+    } else if (player.cards?.includes(cardName) && !coinPosition[id]) {
       socket.emit(SocketAction.MOVE, {
         room,
         color: player.color?.toLowerCase(),
         action: 'PUT',
         location: id,
         card: cardName,
+        id: player.id,
+      });
+    } else if (checkContainsWildCard(player.cards)) {
+      socket.emit(SocketAction.MOVE, {
+        room,
+        color: player.color?.toLowerCase(),
+        action: 'PUT',
+        location: id,
+        card: player.cards?.find((cv) => WILD_CARD_STRING.includes(cv)),
         id: player.id,
       });
     }
@@ -37,18 +65,8 @@ const GameBoard = () => {
           justifyContent: 'space-between',
         }}
       >
-        <PlayerInfo
-          isActive={activePlayer === 0}
-          cardInfo={playerInfo[0]?.cards || []}
-          name={playerInfo[0].userName || ''}
-          color={playerInfo[0].color || ''}
-        />
-        <PlayerInfo
-          isActive={activePlayer === 1}
-          cardInfo={playerInfo[1]?.cards || []}
-          name={playerInfo[1].userName || ''}
-          color={playerInfo[1].color || ''}
-        />
+        <PlayerInfo isActive={activePlayer === 0} user={playerInfo[0]} />
+        <PlayerInfo isActive={activePlayer === 1} user={playerInfo[1]} />
       </div>
       <Container style={{ transform: 'rotate(90deg)', margin: '0 auto', width: '70%' }}>
         <Board
@@ -65,14 +83,7 @@ const GameBoard = () => {
           justifyContent: 'space-between',
         }}
       >
-        {boardLength > 2 && (
-          <PlayerInfo
-            isActive={activePlayer === 2}
-            cardInfo={playerInfo[2]?.cards || []}
-            name={playerInfo[2].userName || ''}
-            color={playerInfo[2].color || ''}
-          />
-        )}
+        {boardLength > 2 && <PlayerInfo isActive={activePlayer === 2} user={playerInfo[2]} />}
       </div>
     </div>
   );

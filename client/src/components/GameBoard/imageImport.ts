@@ -63,6 +63,8 @@ import REMOVE_JACK_SPADE from '../../assets/cards/jack_of_spades2.png';
 import WILD_JACK_DIAMOND from '../../assets/cards/jack_of_diamonds2.png';
 import WILD_JACK_CLUB from '../../assets/cards/jack_of_clubs2.png';
 
+export const WILD_CARD_STRING = ['WILD_JACK_DIAMOND', 'WILD_JACK_CLUB'];
+export const REMOVE_CARD_STRING = ['REMOVE_JACK_HEART', 'REMOVE_JACK_SPADE'];
 export const cardMap: Record<string, string> = {
   oneOfA: oneOfA,
   oneOfD: oneOfD,

@@ -6,6 +6,7 @@ export interface UserType {
   room?: string;
   isAdmin?: boolean;
   cards?: string[];
+  lastCardUsed?: string;
 }
 export enum SocketAction {
   CREATE_ROOM = 'CREATE_ROOM',

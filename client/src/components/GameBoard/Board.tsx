@@ -19,7 +19,7 @@ const Board = ({
           <td style={{ cursor: isActive ? 'pointer' : 'not-allowed' }} key={`${i}-${j}`}>
             <div
               onClick={() => {
-                if (!color && !([0, 9].includes(i) && [0, 9].includes(j))) {
+                if (!([0, 9].includes(i) && [0, 9].includes(j))) {
                   handlePlayerClick(`${i}-${j}`, boardSeqString[i][j]);
                 }
               }}

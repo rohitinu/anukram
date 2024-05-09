@@ -17,3 +17,9 @@
 # create-gmae
 
     - create-game,
+
+# Pending
+
+    - Remove card with REMOVE_JACK
+    - Wild card placement with WILD_JACK
+    - winner checks

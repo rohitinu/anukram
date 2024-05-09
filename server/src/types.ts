@@ -6,6 +6,7 @@ export interface UserInfoType {
   room?: string;
   isAdmin?: boolean;
   cards?: string[];
+  lastCardUsed?: string;
 }
 export interface GameInfoType {
   users: UserInfoType[];

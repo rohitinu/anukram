@@ -168,6 +168,7 @@ io.on("connection", (socket) => {
           const index = user.cards.indexOf(card);
           user.cards[index] = pickACard(gamePlayerInfo.cardDeck);
           currentPlayerInfo = user;
+          user.lastCardUsed = card;
         }
         return user;
       });
