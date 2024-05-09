@@ -129,7 +129,7 @@ export const boardSeq = [
   [SixOfS, oneOfH, FiveOfD, ThreeOfA, FourOfH, ThreeOfH, TenOfH, oneOfA, ThreeOfS, NineOfD],
   [FiveOfS, TwoOfA, FourOfD, FourOfA, FiveOfH, TwoOfH, NineOfH, kingOfA, FourOfS, TenOfD],
   [FourOfS, ThreeOfA, ThreeOfD, FiveOfA, SixOfH, SevenOfH, EightOfH, queenOfA, FiveOfS, queenOfD],
-  [ThreeOfS, FourOfA, TwoOfD, SixOfA, SevenOfA, EightOfA, NineOfA, TenOfA, SixOfH, kingOfD],
+  [ThreeOfS, FourOfA, TwoOfD, SixOfA, SevenOfA, EightOfA, NineOfA, TenOfA, SixOfS, kingOfD],
   [TwoOfS, FiveOfA, oneOfS, kingOfS, queenOfS, TenOfS, NineOfS, EightOfS, SevenOfS, oneOfD],
   [BlackJ, SixOfA, SevenOfA, EightOfA, NineOfA, TenOfA, queenOfA, kingOfA, oneOfA, BlackJ],
 ];
