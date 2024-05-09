@@ -21,6 +21,7 @@ export enum SocketListner {
   ERROR_MESSAGE = 'ERROR_MESSAGE',
   ROOM_INFO = 'ROOM_INFO',
   MY_CARD = 'MY_CARD',
+  MOVE_INFO = 'MOVE_INFO',
 }
 export interface CreateRoomPayload {
   userName: string;

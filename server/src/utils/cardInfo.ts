@@ -48,6 +48,10 @@ const deck: string[] = [
   "TenOfH",
   "TenOfS",
   "BlackJ",
+  "REMOVE_JACK_HEART",
+  "REMOVE_JACK_SPADE",
+  "WILD_JACK_DIAMOND",
+  "WILD_JACK_CLUB",
   "oneOfA",
   "oneOfD",
   "oneOfH",
@@ -97,6 +101,10 @@ const deck: string[] = [
   "TenOfH",
   "TenOfS",
   "BlackJ",
+  "REMOVE_JACK_HEART",
+  "REMOVE_JACK_SPADE",
+  "WILD_JACK_DIAMOND",
+  "WILD_JACK_CLUB",
 ];
 export function shuffledCard() {
   let currentIndex = deck.length;

@@ -7,10 +7,10 @@ import { v4 as uuidv4 } from "uuid";
 import { pickACard, pickNCard, shuffledCard } from "./utils/cardInfo";
 import {
   CreateRoomPayload,
-  GameInfoType,
   JoinRoomPayload,
   MovePayload,
   UpdateColorPayload,
+  UserInfoType,
 } from "./types.js";
 import {
   GAME_ROOMS,
@@ -133,7 +133,6 @@ io.on("connection", (socket) => {
               : user.cards?.map(() => "LOGO"),
         };
       });
-      console.log(playerInfo, room, id);
       socket.emit("ROOM_INFO", {
         users: playerInfo,
         board: gamePlayerInfo.board,
@@ -150,29 +149,45 @@ io.on("connection", (socket) => {
       invalidRoomError(socket, "Game room is not valid");
     } else {
       if (action == "PUT") {
+        /**
+         * put the color on the board.
+         * and pick new card for user, place it at same index which he placed on board.
+         */
         gamePlayerInfo.board = { ...gamePlayerInfo.board, [location]: color };
-        gamePlayerInfo.users = gamePlayerInfo.users.map((user) => {
-          if (user?.cards && user.id === id) {
-            const index = user.cards.indexOf(card);
-            user.cards[index] = pickACard(user.cards);
-          }
-          return user;
-        });
       } else if (action == "REMOVE") {
+        /**
+         * if action is REMOVE then delete the card from board
+         * and pick a new card in place of single eye joker
+         */
         delete gamePlayerInfo.board[location];
         gamePlayerInfo.board = { ...gamePlayerInfo.board };
       }
+      let currentPlayerInfo = {} as UserInfoType;
+      gamePlayerInfo.users = gamePlayerInfo.users.map((user) => {
+        if (user?.cards && user.id === id) {
+          const index = user.cards.indexOf(card);
+          user.cards[index] = pickACard(gamePlayerInfo.cardDeck);
+          currentPlayerInfo = user;
+        }
+        return user;
+      });
+      // Change the active player to next player in round robin
       gamePlayerInfo.activePlayer =
         (gamePlayerInfo.activePlayer + 1) % gamePlayerInfo.playerSize;
       GAME_ROOMS.set(room, gamePlayerInfo);
-      socket.in(room).emit("ROOM_INFO", {
-        board: gamePlayerInfo.board,
-        isActive: gamePlayerInfo.isActive,
-      });
-      socket.emit("ROOM_INFO", {
+      // then emit the information to user and other player
+      socket.in(room).emit("MOVE_INFO", {
         board: gamePlayerInfo.board,
         activePlayer: gamePlayerInfo.activePlayer,
-        isActive: gamePlayerInfo.isActive,
+        currentPlayerInfo: {
+          ...currentPlayerInfo,
+          cards: currentPlayerInfo?.cards?.map(() => "LOGO"),
+        },
+      });
+      socket.emit("MOVE_INFO", {
+        board: gamePlayerInfo.board,
+        activePlayer: gamePlayerInfo.activePlayer,
+        currentPlayerInfo: currentPlayerInfo,
       });
     }
   });

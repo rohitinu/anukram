@@ -22,13 +22,12 @@ const PlayerInfo = ({
       }}
     >
       <Card.Body>
-        <Card.Title>{name}</Card.Title>
-        {cardInfo.map((cv) => (
+        {name}
+        {cardInfo.map((cv, id) => (
           <Image
-            style={{ height: '5rem', width: '4rem' }}
+            style={{ height: '5rem', width: '3.75rem', border: '1px solid black', margin: '2px' }}
             src={cv === 'LOGO' ? Logo : cardMap[cv]}
-            key={cv}
-            thumbnail
+            key={cv + id}
           />
         ))}
       </Card.Body>

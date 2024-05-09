@@ -13,13 +13,12 @@ code {
 table,
 td,
 th {
-  border-radius: 10px;
+  border-radius: 4px;
   text-align: left;
 }
 
 table {
   border-collapse: collapse;
-  width: 100%;
 }
 .dot {
   height: 3rem;
@@ -40,4 +39,7 @@ table {
 }
 .green-color {
   background-color: green;
+}
+table {
+  /* transform: rotate(270deg); */
 }
